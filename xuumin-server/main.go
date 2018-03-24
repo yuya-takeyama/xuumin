@@ -1,4 +1,4 @@
-//go:generate protoc -I ../protos ../protos/xuumin.proto --go_out=plugins=grpc:pb
+//go:generate protoc -I /usr/include -I ../protos -I ../vendor/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis ../protos/xuumin.proto --go_out=plugins=grpc:pb
 
 package main
 
