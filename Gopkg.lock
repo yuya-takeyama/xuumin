@@ -1,4 +1,4 @@
-memo = "3a6a93b6f2072de9eabe289c21115729bdce2a4e3cabc5b3dc95755521def180"
+memo = "79f9fb2a2141fd674c804ac0acb46da13ad01ec2ba22c2e362b08b2018f2e452"
 
 [[projects]]
   branch = "master"
@@ -11,6 +11,12 @@ memo = "3a6a93b6f2072de9eabe289c21115729bdce2a4e3cabc5b3dc95755521def180"
   name = "github.com/lib/pq"
   packages = [".","oid"]
   revision = "b2004221932bd6b13167ef654c81cffac36f7537"
+
+[[projects]]
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
 
 [[projects]]
   branch = "master"
