@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
 	pb "github.com/yuya-takeyama/xuumin/xuumin-server/pb"
@@ -10,11 +11,13 @@ import (
 )
 
 const (
-	address = "localhost:50051"
+	defaultHost = "localhost"
+	defaultPort = "50051"
 )
 
 func main() {
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	log.Printf("Conecting to %s", getAddress())
+	conn, err := grpc.Dial(getAddress(), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -32,4 +35,25 @@ func main() {
 		log.Fatalf("could not add: %v", err)
 	}
 	log.Printf("Added diagram: Result: %s, Uuid: %s, Message: %s", r.Result, r.Uuid, r.Message)
+}
+
+func getAddress() string {
+	var host string
+	var port string
+
+	envHost := os.Getenv("HOST")
+	if envHost == "" {
+		host = defaultHost
+	} else {
+		host = envHost
+	}
+
+	envPort := os.Getenv("PORT")
+	if envPort == "" {
+		port = defaultPort
+	} else {
+		port = envPort
+	}
+
+	return host + ":" + port
 }
