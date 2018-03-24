@@ -4,6 +4,7 @@ package xuumin;
 
 service DiagramService {
     rpc AddDiagram(AddDiagramRequest) returns (AddDiagramReply) {}
+    rpc GetDiagram(GetDiagramRequest) returns (GetDiagramReply) {}
 }
 
 message AddDiagramRequest {
@@ -18,4 +19,13 @@ message AddDiagramReply {
     Result result = 1;
     string uuid = 2;
     string message = 3;
+}
+
+message GetDiagramRequest {
+    string uuid = 1;
+}
+
+message GetDiagramReply {
+    string uuid = 1;
+    string source = 2;
 }
