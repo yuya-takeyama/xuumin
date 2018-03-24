@@ -6,6 +6,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"os"
 
 	pb "github.com/yuya-takeyama/xuumin/xuumin-server/pb"
 	"google.golang.org/grpc"
@@ -13,7 +14,7 @@ import (
 )
 
 const (
-	port = ":50051"
+	defaultPort = "50051"
 )
 
 type server struct{}
@@ -28,7 +29,16 @@ func (s *server) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*pb.
 }
 
 func main() {
-	lis, err := net.Listen("tcp", port)
+	var port string
+
+	envPort := os.Getenv("PORT")
+	if envPort == "" {
+		port = defaultPort
+	} else {
+		port = envPort
+	}
+
+	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
