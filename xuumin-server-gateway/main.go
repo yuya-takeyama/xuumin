@@ -14,12 +14,20 @@ import (
 )
 
 const (
+	defaultPort     = "6000"
 	defaultEndpoint = "localhost:5000"
 )
 
 func run() error {
+	var port string
 	var endpoint string
 
+	envPort := os.Getenv("PORT")
+	if envPort == "" {
+		port = defaultPort
+	} else {
+		port = envPort
+	}
 	envEndpoint := os.Getenv("GRPC_ENDPOINT")
 	if envEndpoint == "" {
 		endpoint = defaultEndpoint
@@ -38,7 +46,8 @@ func run() error {
 		return err
 	}
 
-	return http.ListenAndServe(":8080", mux)
+	log.Printf("Start listening on %s", port)
+	return http.ListenAndServe(":"+port, mux)
 }
 
 func main() {
