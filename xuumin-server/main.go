@@ -3,15 +3,12 @@
 package main
 
 import (
-	"context"
 	"database/sql"
-	"fmt"
 	"log"
 	"net"
 	"os"
 
 	_ "github.com/lib/pq"
-	"github.com/satori/go.uuid"
 	pb "github.com/yuya-takeyama/xuumin/xuumin-server/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -22,38 +19,6 @@ const (
 )
 
 var db *sql.DB
-
-type server struct{}
-
-func (s *server) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*pb.AddDiagramReply, error) {
-	log.Printf("AddDiagram: %v", in)
-	uuid := uuid.NewV4()
-
-	stmt, err := db.Prepare("INSERT INTO diagrams (uuid, source) VALUES ($1, $2)")
-	if err != nil {
-		return addDiagramError(fmt.Sprintf("failed to insert a new diagram: failed to prepare: %s", err))
-	}
-
-	_, execErr := stmt.Exec(uuid.String(), in.Source)
-	if err != nil {
-		return addDiagramError(fmt.Sprintf("failed to insert a new diagram: failed execute statement: %s", execErr))
-
-	}
-
-	return &pb.AddDiagramReply{
-		Result:  pb.AddDiagramReply_OK,
-		Uuid:    uuid.String(),
-		Message: "",
-	}, nil
-}
-
-func addDiagramError(message string) (*pb.AddDiagramReply, error) {
-	return &pb.AddDiagramReply{
-		Result:  pb.AddDiagramReply_NG,
-		Uuid:    "",
-		Message: message,
-	}, nil
-}
 
 func init() {
 	var err error
@@ -81,7 +46,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterDiagramServiceServer(s, &server{})
+	pb.RegisterDiagramServiceServer(s, &services{})
 	reflection.Register(s)
 	log.Printf("Start listening on %s", port)
 	if err := s.Serve(lis); err != nil {
