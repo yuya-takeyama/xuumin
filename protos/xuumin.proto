@@ -7,8 +7,7 @@ service DiagramService {
 }
 
 message AddDiagramRequest {
-    string uuid = 1;
-    string source = 2;
+    string source = 1;
 }
 
 message AddDiagramReply {
