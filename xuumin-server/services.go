@@ -33,6 +33,27 @@ func (s *services) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*p
 	}, nil
 }
 
+func (s *services) GetDiagram(ctx context.Context, in *pb.GetDiagramRequest) (*pb.GetDiagramReply, error) {
+	log.Printf("GetDiagram: %v", in)
+
+	stmt, err := db.Prepare("SELECT uuid, source FROM diagrams WHERE uuid = $1 LIMIT 1")
+	if err != nil {
+		return nil, fmt.Errorf("failed to get a diagram: failed to prepare: %s", err)
+	}
+
+	var uuid string
+	var source string
+	execErr := stmt.QueryRow(in.Uuid).Scan(&uuid, &source)
+	if execErr != nil {
+		return nil, fmt.Errorf("failed to get a diagram: failed to execute query: %s", execErr)
+	}
+
+	return &pb.GetDiagramReply{
+		Uuid:   uuid,
+		Source: source,
+	}, nil
+}
+
 func addDiagramError(message string) (*pb.AddDiagramReply, error) {
 	return &pb.AddDiagramReply{
 		Result:  pb.AddDiagramReply_NG,
