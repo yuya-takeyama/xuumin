@@ -19,6 +19,7 @@ const (
 type server struct{}
 
 func (s *server) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*pb.AddDiagramReply, error) {
+	log.Printf("AddDiagram: %v", in)
 	return &pb.AddDiagramReply{
 		Result:  pb.AddDiagramReply_OK,
 		Uuid:    "foo",
@@ -35,6 +36,7 @@ func main() {
 	s := grpc.NewServer()
 	pb.RegisterDiagramServiceServer(s, &server{})
 	reflection.Register(s)
+	log.Printf("Start listening on %s", port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
