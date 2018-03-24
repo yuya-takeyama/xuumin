@@ -4,7 +4,7 @@ ENV GOPATH /go
 
 WORKDIR /go/src/github.com/yuya-takeyama/xuumin
 
-RUN apk add --update git protobuf && \
+RUN apk add --update git protobuf protobuf-dev && \
   go get -u -v github.com/golang/protobuf/protoc-gen-go
 
 ADD . /go/src/github.com/yuya-takeyama/xuumin
