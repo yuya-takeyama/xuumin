@@ -1,10 +1,16 @@
-memo = "9628e8c2b44276920231d762345da3a43ac2481d2ed9064164237386a04e1e17"
+memo = "3a6a93b6f2072de9eabe289c21115729bdce2a4e3cabc5b3dc95755521def180"
 
 [[projects]]
   branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto","protoc-gen-go/descriptor","ptypes","ptypes/any","ptypes/duration","ptypes/timestamp"]
   revision = "bbd03ef6da3a115852eaf24c8a1c46aeb39aa175"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lib/pq"
+  packages = [".","oid"]
+  revision = "b2004221932bd6b13167ef654c81cffac36f7537"
 
 [[projects]]
   branch = "master"
