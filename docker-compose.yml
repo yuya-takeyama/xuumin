@@ -4,6 +4,7 @@ services:
     container_name: xuumin-server
     build:
       context: .
+      dockerfile: ./xuumin-server/Dockerfile
     environment:
       - PORT=5000
       - DATABASE_URI=postgres://pguser:pgpassword@xuumin-postgres/pqgotest?sslmode=disable
