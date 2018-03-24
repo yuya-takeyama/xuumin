@@ -1,0 +1,24 @@
+version: '3.0'
+services:
+  server:
+    container_name: xuumin-server
+    build:
+      context: .
+    environment:
+      - PORT=5000
+      - DATABASE_URI=postgres://pguser:pgpassword@xuumin-postgres/pqgotest?sslmode=disable
+    ports:
+      - 5000:5000
+    volumes:
+      - go:/go
+    depends_on: [postgres]
+
+  postgres:
+    container_name: xuumin-postgres
+    image: postgres:10.3-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  go:
+  postgres-data:
