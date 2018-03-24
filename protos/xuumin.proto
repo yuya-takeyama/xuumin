@@ -2,8 +2,15 @@ syntax = "proto3";
 
 package xuumin;
 
+import "google/api/annotations.proto";
+
 service DiagramService {
-    rpc AddDiagram(AddDiagramRequest) returns (AddDiagramReply) {}
+    rpc AddDiagram(AddDiagramRequest) returns (AddDiagramReply) {
+        option (google.api.http) = {
+            post: "/v1/diagrams"
+            body: "*"
+        };
+    }
     rpc GetDiagram(GetDiagramRequest) returns (GetDiagramReply) {}
 }
 

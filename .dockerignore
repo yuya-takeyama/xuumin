@@ -1,2 +1,3 @@
 /.git
 /xuumin-server/pb/*.pb.go
+/xuumin-server/pb/*.pb.gw.go

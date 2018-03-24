@@ -14,6 +14,19 @@ services:
       - go:/go
     depends_on: [postgres]
 
+  server-gateway:
+    container_name: xuumin-server-gateway
+    build:
+      context: .
+      dockerfile: ./xuumin-server-gateway/Dockerfile
+    environment:
+      - 'GRPC_ENDPOINT=xuumin-server:5000'
+    ports:
+      - 8080:8080
+    volumes:
+      - go:/go
+    depends_on: [server]
+
   postgres:
     container_name: xuumin-postgres
     image: postgres:10.3-alpine
