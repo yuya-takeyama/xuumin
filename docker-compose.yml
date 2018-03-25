@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   client:
-    container_name: xuumin-client
+    container_name: client
     build:
       context: .
       dockerfile: ./xuumin-client/Dockerfile
@@ -18,7 +18,7 @@ services:
     depends_on: [server-gateway]
 
   server:
-    container_name: xuumin-server
+    container_name: server
     build:
       context: .
       dockerfile: ./xuumin-server/Dockerfile
@@ -33,7 +33,7 @@ services:
     depends_on: [postgres]
 
   server-gateway:
-    container_name: xuumin-server-gateway
+    container_name: server-gateway
     build:
       context: .
       dockerfile: ./xuumin-server-gateway/Dockerfile
@@ -48,13 +48,13 @@ services:
     depends_on: [server]
 
   postgres:
-    container_name: xuumin-postgres
+    container_name: postgres
     image: postgres:10.3-alpine
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
   scripts:
-    container_name: xuumin-scripts
+    container_name: scripts
     build:
       context: .
       dockerfile: ./xuumin-scripts/Dockerfile
