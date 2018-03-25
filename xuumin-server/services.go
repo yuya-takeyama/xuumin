@@ -17,19 +17,17 @@ func (s *services) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*p
 
 	stmt, err := db.Prepare("INSERT INTO diagrams (uuid, source) VALUES ($1, $2)")
 	if err != nil {
-		return addDiagramError(fmt.Sprintf("failed to insert a new diagram: failed to prepare: %s", err))
+		return nil, fmt.Errorf("failed to insert a new diagram: failed to prepare: %s", err)
 	}
 
 	_, execErr := stmt.Exec(uuid.String(), in.Source)
 	if err != nil {
-		return addDiagramError(fmt.Sprintf("failed to insert a new diagram: failed execute statement: %s", execErr))
-
+		return nil, fmt.Errorf("failed to insert a new diagram: failed execute statement: %s", execErr)
 	}
 
 	return &pb.AddDiagramReply{
-		Result:  pb.AddDiagramReply_OK,
-		Uuid:    uuid.String(),
-		Message: "",
+		Uuid:   uuid.String(),
+		Source: in.Source,
 	}, nil
 }
 
@@ -51,13 +49,5 @@ func (s *services) GetDiagram(ctx context.Context, in *pb.GetDiagramRequest) (*p
 	return &pb.GetDiagramReply{
 		Uuid:   uuid,
 		Source: source,
-	}, nil
-}
-
-func addDiagramError(message string) (*pb.AddDiagramReply, error) {
-	return &pb.AddDiagramReply{
-		Result:  pb.AddDiagramReply_NG,
-		Uuid:    "",
-		Message: message,
 	}, nil
 }

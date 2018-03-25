@@ -23,13 +23,8 @@ message AddDiagramRequest {
 }
 
 message AddDiagramReply {
-    enum Result {
-        OK = 0;
-        NG = 1;
-    }
-    Result result = 1;
-    string uuid = 2;
-    string message = 3;
+    string uuid = 1;
+    string source = 2;
 }
 
 message GetDiagramRequest {
