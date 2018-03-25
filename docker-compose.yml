@@ -1,5 +1,18 @@
 version: '3.0'
 services:
+  client:
+    container_name: xuumin-client
+    build:
+      context: .
+      dockerfile: ./xuumin-client/Dockerfile
+    environment:
+      - PORT=4000
+    ports:
+      - 4000:4000
+    volumes:
+      - ./xuumin-client:/app:cached
+    depends_on: [server-gateway]
+
   server:
     container_name: xuumin-server
     build:
