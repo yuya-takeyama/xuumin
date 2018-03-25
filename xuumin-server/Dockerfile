@@ -4,7 +4,9 @@ WORKDIR /go/src/github.com/yuya-takeyama/xuumin
 
 RUN apk add --update git
 
-COPY . /go/src/github.com/yuya-takeyama/xuumin
+COPY ./vendor /go/src/github.com/yuya-takeyama/xuumin/vendor
+COPY ./xuumin-server /go/src/github.com/yuya-takeyama/xuumin/xuumin-server
+COPY ./xuumin-server-gateway /go/src/github.com/yuya-takeyama/xuumin/xuumin-server-gateway
 
 RUN cd ./xuumin-server && go build
 
