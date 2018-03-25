@@ -11,6 +11,34 @@ import (
 
 type services struct{}
 
+func (s *services) GetDiagrams(ctx context.Context, in *pb.GetDiagramsRequest) (*pb.Diagrams, error) {
+	var diagrams []*pb.Diagram
+
+	rows, err := db.Query("SELECT uuid, source FROM diagrams")
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch diagrams: %s", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var uuid string
+		var source string
+		err = rows.Scan(&uuid, &source)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan a record: %s", err)
+		}
+		diagrams = append(diagrams, &pb.Diagram{
+			Uuid:   uuid,
+			Source: source,
+		})
+	}
+
+	return &pb.Diagrams{
+		Diagrams: diagrams,
+	}, nil
+}
+
 func (s *services) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*pb.Diagram, error) {
 	log.Printf("AddDiagram: %v", in)
 	uuid := uuid.NewV4()
