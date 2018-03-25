@@ -5,6 +5,11 @@ package xuumin;
 import "google/api/annotations.proto";
 
 service DiagramService {
+    rpc GetDiagrams(GetDiagramsRequest) returns (Diagrams) {
+        option (google.api.http) = {
+            get: "/v1/diagrams"
+        };
+    }
     rpc AddDiagram(AddDiagramRequest) returns (Diagram) {
         option (google.api.http) = {
             post: "/v1/diagrams"
@@ -21,6 +26,13 @@ service DiagramService {
 message Diagram {
     string uuid = 1;
     string source = 2;
+}
+
+message Diagrams {
+    repeated Diagram diagrams = 1;
+}
+
+message GetDiagramsRequest {
 }
 
 message AddDiagramRequest {
