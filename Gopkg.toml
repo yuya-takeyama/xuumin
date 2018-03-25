@@ -49,7 +49,7 @@
 ## what source location any dependent projects specify.
 # source = "https://github.com/myfork/package.git"
 
-
+required = ["github.com/golang/glog"]
 
 [[dependencies]]
   branch = "master"

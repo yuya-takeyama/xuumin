@@ -1,4 +1,10 @@
-memo = "a0138d22830caddb39edb915d71015a4f6bdf1e16f3e6b3fbc54daa3e98e7046"
+memo = "a87291dabbb7889f2c2126e71fb30a6c27468bad9b73f44c7b1988955d214e82"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/golang/glog"
+  packages = ["."]
+  revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
 
 [[projects]]
   branch = "master"
