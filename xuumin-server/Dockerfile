@@ -4,14 +4,11 @@ ENV GOPATH /go
 
 WORKDIR /go/src/github.com/yuya-takeyama/xuumin
 
-RUN apk add --update git protobuf protobuf-dev && \
-  go get -u -v github.com/golang/protobuf/protoc-gen-go
+RUN apk add --update git protobuf protobuf-dev
 
-ADD . /go/src/github.com/yuya-takeyama/xuumin
+COPY . /go/src/github.com/yuya-takeyama/xuumin
 
-RUN ./scripts/generate_pb_package && \
-  cd xuumin-server && \
-  go build
+RUN cd ./xuumin-server && go build
 
 FROM alpine:3.7
 

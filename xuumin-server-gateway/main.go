@@ -1,5 +1,3 @@
-//go:generate protoc -I ../protos -I ../vendor/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --grpc-gateway_out=logtostderr=true:../xuumin-server/pb ../protos/xuumin.proto
-
 package main
 
 import (

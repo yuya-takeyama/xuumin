@@ -1,2 +1,8 @@
 #!/bin/sh
-cd xuumin-server && go generate
+export XUUMIN_PATH=$GOPATH/src/github.com/yuya-takeyama/xuumin
+protoc -I /usr/include \
+  -I $XUUMIN_PATH/protos \
+  -I $XUUMIN_PATH/vendor/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  --go_out=plugins=grpc:$XUUMIN_PATH/xuumin-server/pb \
+  --grpc-gateway_out=logtostderr=true:$XUUMIN_PATH/xuumin-server/pb \
+  xuumin.proto

@@ -12,6 +12,7 @@ services:
       - 5000:5000
     volumes:
       - go:/go
+      - ./:/go/src/github.com/yuya-takeyama/xuumin:cached
     depends_on: [postgres]
 
   server-gateway:
@@ -25,6 +26,8 @@ services:
       - 6000:6000
     volumes:
       - go:/go
+      - ./:/go/src/github.com/yuya-takeyama/xuumin:cached
+
     depends_on: [server]
 
   postgres:
@@ -32,6 +35,15 @@ services:
     image: postgres:10.3-alpine
     volumes:
       - postgres-data:/var/lib/postgresql/data
+
+  scripts:
+    container_name: xuumin-scripts
+    build:
+      context: .
+      dockerfile: ./scripts/Dockerfile
+    volumes:
+      - go:/go
+      - ./:/go/src/github.com/yuya-takeyama/xuumin:cached
 
 volumes:
   go:

@@ -4,16 +4,11 @@ ENV GOPATH /go
 
 WORKDIR /go/src/github.com/yuya-takeyama/xuumin
 
-RUN apk add --update git protobuf protobuf-dev && \
-  go get -u -v github.com/golang/protobuf/protoc-gen-go && \
-  go get -u -v github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
+RUN apk add --update git protobuf protobuf-dev
 
-ADD . /go/src/github.com/yuya-takeyama/xuumin
+COPY . /go/src/github.com/yuya-takeyama/xuumin
 
-RUN ./scripts/generate_pb_package && \
-  ./scripts/generate_reverse_proxy && \
-  cd xuumin-server-gateway && \
-  go build
+RUN cd ./xuumin-server-gateway && go build
 
 FROM alpine:3.7
 
