@@ -40,7 +40,7 @@ services:
     container_name: xuumin-scripts
     build:
       context: .
-      dockerfile: ./scripts/Dockerfile
+      dockerfile: ./xuumin-scripts/Dockerfile
     volumes:
       - go:/go
       - ./:/go/src/github.com/yuya-takeyama/xuumin:cached

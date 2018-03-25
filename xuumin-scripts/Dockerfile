@@ -24,5 +24,5 @@ RUN go get -v ./vendor/github.com/golang/protobuf/protoc-gen-go && \
 
 CMD watchman -- \
   trigger . protofiles 'protos/*.proto' -- \
-  /go/src/github.com/yuya-takeyama/xuumin/scripts/generate_pb_package && \
+  /go/src/github.com/yuya-takeyama/xuumin/xuumin-scripts/generate_pb_package && \
   tail -f /usr/local/var/run/watchman/root-state/log
