@@ -3,3 +3,4 @@
 set -eux
 
 docker-compose run scripts ./xuumin-scripts/generate_pb_package
+docker-compose run client yarn
