@@ -17,7 +17,7 @@ RUN git clone --depth 1 -b v4.9.0 https://github.com/facebook/watchman.git && \
   cd ../ && \
   rm -rf watchman
 
-COPY . /go/src/github.com/yuya-takeyama/xuumin
+COPY ./vendor /go/src/github.com/yuya-takeyama/xuumin/vendor
 
 RUN go get -v ./vendor/github.com/golang/protobuf/protoc-gen-go && \
   go get -v ./vendor/github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
