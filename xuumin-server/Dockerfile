@@ -1,10 +1,8 @@
 FROM golang:1.10.0-alpine AS build-env
 
-ENV GOPATH /go
-
 WORKDIR /go/src/github.com/yuya-takeyama/xuumin
 
-RUN apk add --update git protobuf protobuf-dev
+RUN apk add --update git
 
 COPY . /go/src/github.com/yuya-takeyama/xuumin
 
