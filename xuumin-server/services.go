@@ -11,7 +11,7 @@ import (
 
 type services struct{}
 
-func (s *services) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*pb.AddDiagramReply, error) {
+func (s *services) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*pb.Diagram, error) {
 	log.Printf("AddDiagram: %v", in)
 	uuid := uuid.NewV4()
 
@@ -25,13 +25,13 @@ func (s *services) AddDiagram(ctx context.Context, in *pb.AddDiagramRequest) (*p
 		return nil, fmt.Errorf("failed to insert a new diagram: failed execute statement: %s", execErr)
 	}
 
-	return &pb.AddDiagramReply{
+	return &pb.Diagram{
 		Uuid:   uuid.String(),
 		Source: in.Source,
 	}, nil
 }
 
-func (s *services) GetDiagram(ctx context.Context, in *pb.GetDiagramRequest) (*pb.GetDiagramReply, error) {
+func (s *services) GetDiagram(ctx context.Context, in *pb.GetDiagramRequest) (*pb.Diagram, error) {
 	log.Printf("GetDiagram: %v", in)
 
 	stmt, err := db.Prepare("SELECT uuid, source FROM diagrams WHERE uuid = $1 LIMIT 1")
@@ -46,7 +46,7 @@ func (s *services) GetDiagram(ctx context.Context, in *pb.GetDiagramRequest) (*p
 		return nil, fmt.Errorf("failed to get a diagram: failed to execute query: %s", execErr)
 	}
 
-	return &pb.GetDiagramReply{
+	return &pb.Diagram{
 		Uuid:   uuid,
 		Source: source,
 	}, nil
