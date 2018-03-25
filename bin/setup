@@ -2,5 +2,5 @@
 
 set -eux
 
-docker-compose run scripts ./xuumin-scripts/generate_pb_package
-docker-compose run client yarn
+docker-compose run --rm scripts ./xuumin-scripts/generate_pb_package
+docker-compose run --rm client yarn

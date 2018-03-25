@@ -2,4 +2,4 @@
 
 set -eux
 
-docker-compose up
+docker-compose build
