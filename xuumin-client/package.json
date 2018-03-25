@@ -50,6 +50,8 @@
     "@types/node": "^9.6.0",
     "@types/react": "^16.0.41",
     "@types/react-dom": "^16.0.4",
+    "prettier": "^1.11.1",
+    "tslint-config-prettier": "^1.10.0",
     "typescript": "^2.7.2"
   },
   "jest": {
