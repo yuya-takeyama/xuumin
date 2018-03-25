@@ -11,7 +11,11 @@ service DiagramService {
             body: "*"
         };
     }
-    rpc GetDiagram(GetDiagramRequest) returns (GetDiagramReply) {}
+    rpc GetDiagram(GetDiagramRequest) returns (GetDiagramReply) {
+        option (google.api.http) = {
+            get: "/v1/diagrams/{uuid}"
+        };
+    }
 }
 
 message AddDiagramRequest {
