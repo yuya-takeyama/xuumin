@@ -23,9 +23,11 @@ RUN go get -v ./vendor/github.com/golang/protobuf/protoc-gen-go && \
 FROM alpine:3.7
 
 WORKDIR /app
-COPY --from=build-env /go/bin/protoc-gen-go /app
-COPY --from=build-env /go/bin/protoc-gen-grpc-gateway /app
-COPY --from=build-env /usr/local/bin/watchman /app
+COPY --from=build-env \
+  /go/bin/protoc-gen-go \
+  /go/bin/protoc-gen-grpc-gateway \
+  /usr/local/bin/watchman \
+  /app/
 
 RUN apk add --update protobuf protobuf-dev openssl-dev && \
   mkdir -pv /usr/local/var/run/watchman/root-state
