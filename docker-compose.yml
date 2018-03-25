@@ -10,7 +10,11 @@ services:
     ports:
       - 4000:4000
     volumes:
-      - ./xuumin-client:/app:cached
+      - client-node-modules:/app/node_modules
+      - ./xuumin-client/config:/app/config:cached
+      - ./xuumin-client/public:/app/public:cached
+      - ./xuumin-client/scripts:/app/scripts:cached
+      - ./xuumin-client/src:/app/src:cached
     depends_on: [server-gateway]
 
   server:
@@ -61,3 +65,4 @@ services:
 volumes:
   go:
   postgres-data:
+  client-node-modules:
