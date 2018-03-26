@@ -1,19 +1,44 @@
 import * as React from 'react';
 import './App.css';
 
-const logo = require('./logo.svg');
+interface Diagram {
+  uuid: string;
+  source: string;
+}
 
-class App extends React.Component {
+interface State {
+  diagrams?: Diagram[];
+}
+type Props = {};
+
+class App extends React.Component<Props, State> {
+  componentDidMount() {
+    fetch('/v1/diagrams')
+      .then(res => res.json())
+      .then(json => {
+        this.setState({ diagrams: json.diagrams });
+      });
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Xuumin</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+
+        {this.state &&
+          this.state.diagrams && (
+            <div>
+              <ul>
+                {this.state.diagrams.map(diagram => (
+                  <li>
+                    <a href={`/diagrams/${diagram.uuid}`}>{diagram.uuid}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
       </div>
     );
   }
