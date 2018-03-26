@@ -1,5 +1,14 @@
 version: '3.0'
 services:
+  reverse-proxy:
+    container_name: reverse-proxy
+    build:
+      context: .
+      dockerfile: ./reverse-proxy/Dockerfile
+    ports:
+      - 3000:80
+    depends_on: [client, server-gateway]
+
   client:
     container_name: client
     build:
