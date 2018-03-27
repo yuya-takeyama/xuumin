@@ -34,6 +34,7 @@ class App extends React.Component<Props, State> {
                 {this.state.diagrams.map(diagram => (
                   <li>
                     <a href={`/diagrams/${diagram.uuid}`}>{diagram.uuid}</a>
+                    <img src={`/diagrams/${diagram.uuid}.svg`} />
                   </li>
                 ))}
               </ul>
