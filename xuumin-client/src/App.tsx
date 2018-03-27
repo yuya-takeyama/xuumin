@@ -4,6 +4,7 @@ import './App.css';
 interface Diagram {
   uuid: string;
   source: string;
+  title: string;
 }
 
 interface State {
@@ -33,7 +34,7 @@ class App extends React.Component<Props, State> {
               <ul>
                 {this.state.diagrams.map((diagram, i) => (
                   <li key={i}>
-                    <a href={`/diagrams/${diagram.uuid}`}>{diagram.uuid}</a>
+                    <a href={`/diagrams/${diagram.uuid}`}>{diagram.title}</a>
                     <img src={`/diagrams/${diagram.uuid}.svg`} />
                   </li>
                 ))}
