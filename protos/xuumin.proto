@@ -26,6 +26,7 @@ service DiagramService {
 message Diagram {
     string uuid = 1;
     string source = 2;
+    string title = 3;
 }
 
 message Diagrams {
@@ -37,6 +38,7 @@ message GetDiagramsRequest {
 
 message AddDiagramRequest {
     string source = 1;
+    string title = 2;
 }
 
 message GetDiagramRequest {
