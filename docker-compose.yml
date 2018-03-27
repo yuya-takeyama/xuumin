@@ -15,7 +15,7 @@ services:
       dockerfile: ./reverse-proxy/Dockerfile
     ports:
       - 3000:80
-    depends_on: [client, server-gateway]
+    depends_on: [client, server-gateway, image-service]
 
   client:
     container_name: client
@@ -33,6 +33,19 @@ services:
       - ./xuumin-client/scripts:/app/scripts:cached
       - ./xuumin-client/src:/app/src:cached
     depends_on: [server-gateway]
+
+  image-service:
+    container_name: image-service
+    build:
+      context: .
+      dockerfile: ./xuumin-image-service/Dockerfile
+    environment:
+    environment:
+      - PORT=8000
+      - GRPC_ENDPOINT=server:5000
+      - PLANTUML_SERVICE_ENDPOINT=http://plantuml-service:3000
+    ports:
+      - 8000:8000
 
   server:
     container_name: server
@@ -61,8 +74,13 @@ services:
     volumes:
       - go:/go
       - ./:/go/src/github.com/yuya-takeyama/xuumin:cached
+    depends_on: [server, plantuml-service]
 
-    depends_on: [server]
+  plantuml-service:
+    container_name: plantuml-service
+    image: yuyat/plantuml-service:latest
+    ports:
+      - 7000:3000
 
   postgres:
     container_name: postgres
