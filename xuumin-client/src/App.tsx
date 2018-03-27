@@ -18,6 +18,10 @@ class App extends React.Component<Props, State> {
       .then(res => res.json())
       .then(json => {
         this.setState({ diagrams: json.diagrams });
+      })
+      .catch(err => {
+        // tslint:disable-next-line:no-console
+        console.error(err);
       });
   }
 
