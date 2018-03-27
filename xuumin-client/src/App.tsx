@@ -31,8 +31,8 @@ class App extends React.Component<Props, State> {
           this.state.diagrams && (
             <div>
               <ul>
-                {this.state.diagrams.map(diagram => (
-                  <li>
+                {this.state.diagrams.map((diagram, i) => (
+                  <li key={i}>
                     <a href={`/diagrams/${diagram.uuid}`}>{diagram.uuid}</a>
                     <img src={`/diagrams/${diagram.uuid}.svg`} />
                   </li>
