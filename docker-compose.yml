@@ -15,7 +15,7 @@ services:
       dockerfile: ./reverse-proxy/Dockerfile
     ports:
       - 3000:80
-    depends_on: [client, server-gateway]
+    depends_on: [client, server-gateway, image-service]
 
   client:
     container_name: client
