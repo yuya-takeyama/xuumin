@@ -32,6 +32,8 @@ services:
       - ./xuumin-client/public:/app/public:cached
       - ./xuumin-client/scripts:/app/scripts:cached
       - ./xuumin-client/src:/app/src:cached
+      - ./xuumin-client/package.json:/app/package.json:cached
+      - ./xuumin-client/yarn.lock:/app/yarn.lock:cached
     depends_on: [server-gateway]
 
   image-service:
