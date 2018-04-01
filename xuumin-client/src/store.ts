@@ -1,6 +1,6 @@
 import { compose, createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import reducers from './reducers';
+import reducers, { State, createInitialState } from './reducers';
 import reduxThunk from 'redux-thunk';
 
 const createEnhancer = () => {
@@ -13,5 +13,5 @@ const createEnhancer = () => {
 
 export const configureStore = () => {
   const enhancer = createEnhancer();
-  return createStore(reducers, {}, enhancer);
+  return createStore<State>(reducers, createInitialState(), enhancer);
 };
