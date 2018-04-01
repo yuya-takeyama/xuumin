@@ -3,15 +3,16 @@ import { Diagram } from '../interfaces';
 import { fetchDiagrams, fetchDiagram } from '../actions/diagramActions';
 
 export interface State {
-  diagrams: Diagram[];
+  entities: { [key: string]: Diagram };
+  ids: string[];
   isFetchingDiagrams: boolean;
-  diagram?: Diagram;
   isFetchingDiagram: boolean;
   error?: Error;
 }
 
 export const createInitialState = (): State => ({
-  diagrams: [],
+  entities: {},
+  ids: [],
   isFetchingDiagrams: false,
   isFetchingDiagram: false,
 });
@@ -23,13 +24,17 @@ export const diagramReducer = reducerWithInitialState(createInitialState())
   }))
   .caseWithAction(fetchDiagrams.done, (state, action) => ({
     ...state,
-    diagrams: action.payload.result.diagrams,
+    entities: {
+      ...state.entities,
+      ...action.payload.result.entities,
+    },
+    ids: action.payload.result.ids,
     isFetchingDiagrams: false,
   }))
   .caseWithAction(fetchDiagrams.failed, (state, action) => ({
     ...state,
-    error: action.payload.error,
     isFetchingDiagrams: false,
+    error: action.payload.error,
   }))
   .case(fetchDiagram.started, state => ({
     ...state,
@@ -37,8 +42,11 @@ export const diagramReducer = reducerWithInitialState(createInitialState())
   }))
   .caseWithAction(fetchDiagram.done, (state, action) => ({
     ...state,
+    entities: {
+      ...state.entities,
+      [action.payload.params.uuid]: action.payload.result,
+    },
     isFetchingDiagram: false,
-    diagram: action.payload.result,
   }))
   .caseWithAction(fetchDiagram.failed, (state, action) => ({
     ...state,

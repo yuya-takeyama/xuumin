@@ -4,22 +4,31 @@ import { Diagram } from '../interfaces';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import { State } from '../reducers';
-import { State as DiagramState } from '../reducers/diagramReducer';
 import { fetchDiagramsRequest } from '../actions/diagramActions';
+import { denormalize } from 'normalizr';
+import { diagramsSchema } from '../schema';
 
-type StateProps = Pick<
-  DiagramState,
-  'diagrams' | 'isFetchingDiagrams' | 'error'
->;
+interface StateProps {
+  diagrams: Diagram[];
+  isFetchingDiagrams: boolean;
+}
 
 interface DispatchProps {
   fetchDiagramsRequest: () => void;
 }
 
-const mapStateToProps = (state: State): StateProps => ({
-  diagrams: state.diagram.diagrams,
-  isFetchingDiagrams: state.diagram.isFetchingDiagrams,
-});
+const mapStateToProps = (state: State): StateProps => {
+  const { diagrams } = denormalize(
+    { diagrams: state.diagram.ids },
+    diagramsSchema,
+    { diagrams: state.diagram.entities },
+  );
+
+  return {
+    diagrams,
+    isFetchingDiagrams: state.diagram.isFetchingDiagrams,
+  };
+};
 
 const mapDispatchToProps = (dispatch: Dispatch<State>) =>
   bindActionCreators(

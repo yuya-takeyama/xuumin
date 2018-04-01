@@ -7,7 +7,8 @@ import { bindActionCreators } from 'redux';
 import { fetchDiagramRequest } from '../../actions/diagramActions';
 
 interface StateProps {
-  diagram?: Diagram;
+  entities: { [key: string]: Diagram };
+  ids: string[];
   isFetchingDiagram: boolean;
   error?: Error;
 }
@@ -23,8 +24,9 @@ interface RouteParams {
 interface OwnProps extends RouteComponentProps<RouteParams> {}
 
 const mapStateToProps = (state: State): StateProps => ({
+  entities: state.diagram.entities,
+  ids: state.diagram.ids,
   isFetchingDiagram: state.diagram.isFetchingDiagram,
-  diagram: state.diagram.diagram,
   error: state.diagram.error,
 });
 
@@ -40,19 +42,29 @@ class ShowDiagram extends React.Component<
   StateProps & DispatchProps & OwnProps
 > {
   componentDidMount() {
-    this.props.fetchDiagramRequest({ uuid: this.props.match.params.id });
+    const diagram = this.getDiagram();
+
+    if (!diagram) {
+      this.props.fetchDiagramRequest({ uuid: this.props.match.params.id });
+    }
+  }
+
+  getDiagram(): Diagram | undefined {
+    return this.props.entities[this.props.match.params.id];
   }
 
   render() {
+    const diagram = this.getDiagram();
+
     if (this.props.isFetchingDiagram) {
       return <div>Loading a diagram...</div>;
     }
-    if (this.props.diagram) {
+    if (diagram) {
       return (
         <div>
-          <h2>{this.props.diagram.title}</h2>
+          <h2>{diagram.title}</h2>
 
-          <img src={`/diagrams/${this.props.diagram.uuid}.svg`} />
+          <img src={`/diagrams/${diagram.uuid}.svg`} />
           <div>
             <Link to="/">Home</Link>
           </div>
