@@ -13,4 +13,4 @@ export const createInitialState = (): State => ({
   diagram: createDiagramInitialState(),
 });
 
-export default combineReducers({ diagram });
+export default combineReducers<State>({ diagram });
