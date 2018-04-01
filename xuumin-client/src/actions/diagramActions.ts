@@ -54,7 +54,7 @@ export const fetchDiagramRequest = (params: {
       dispatch(
         fetchDiagram.done({
           params,
-          result: json.diagrams,
+          result: json,
         }),
       );
     })
