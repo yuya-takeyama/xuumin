@@ -1,13 +1,18 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { Diagram } from '../interfaces';
-import { fetchDiagrams, fetchDiagram } from '../actions/diagramActions';
+import {
+  fetchDiagrams,
+  fetchDiagram,
+  createDiagram,
+} from '../actions/diagramActions';
 
 export interface State {
   entities: { [key: string]: Diagram };
   ids: string[];
   isFetchingDiagrams: boolean;
   isFetchingDiagram: boolean;
-  error?: Error;
+  isCreatingDiagram: boolean;
+  error?: { message: string };
 }
 
 export const createInitialState = (): State => ({
@@ -15,6 +20,7 @@ export const createInitialState = (): State => ({
   ids: [],
   isFetchingDiagrams: false,
   isFetchingDiagram: false,
+  isCreatingDiagram: false,
 });
 
 export const diagramReducer = reducerWithInitialState(createInitialState())
@@ -52,4 +58,16 @@ export const diagramReducer = reducerWithInitialState(createInitialState())
     ...state,
     isFetchingDiagram: false,
     error: action.payload.error,
+  }))
+  .case(createDiagram.started, state => ({
+    ...state,
+    isCreatingDiagram: true,
+  }))
+  .case(createDiagram.done, state => ({
+    ...state,
+    isCreatingDiagram: false,
+  }))
+  .case(createDiagram.failed, state => ({
+    ...state,
+    isCreatingDiagram: false,
   }));

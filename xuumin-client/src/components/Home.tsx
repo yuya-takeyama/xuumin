@@ -60,7 +60,12 @@ class Home extends React.Component<StateProps & DispatchProps> {
       return <div>Fetching diagrams...</div>;
     }
 
-    return <DiagramList diagrams={this.props.diagrams} />;
+    return (
+      <div>
+        <DiagramList diagrams={this.props.diagrams} />
+        <Link to={'/diagrams/new'}>New</Link>
+      </div>
+    );
   }
 }
 

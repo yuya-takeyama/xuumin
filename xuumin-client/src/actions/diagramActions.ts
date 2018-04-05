@@ -23,6 +23,17 @@ export const fetchDiagram = actionCreatorFactory.async<
   Error
 >('FETCH_DIAGRAM');
 
+export interface CreateDiagramParams {
+  title: string;
+  source: string;
+}
+
+export const createDiagram = actionCreatorFactory.async<
+  CreateDiagramParams,
+  Diagram,
+  Error
+>('CREATE_DIAGRAM');
+
 export const fetchDiagramsRequest = (): ThunkAction<
   void,
   State,
@@ -75,4 +86,37 @@ export const fetchDiagramRequest = (params: {
         }),
       );
     });
+};
+
+export const createDiagramRequest = (
+  params: CreateDiagramParams,
+): ThunkAction<Promise<Diagram>, State, void> => async (
+  dispatch,
+): Promise<Diagram> => {
+  dispatch(createDiagram.started(params));
+  try {
+    const res = await fetch('/v1/diagrams', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    const json = await res.json();
+
+    if (res.ok) {
+      dispatch(createDiagram.done({ params, result: json }));
+      return json;
+    }
+
+    throw new Error(json.error);
+  } catch (err) {
+    const error = ensureError(err);
+    dispatch(
+      createDiagram.failed({
+        params,
+        error,
+      }),
+    );
+
+    return Promise.reject(error);
+  }
 };
