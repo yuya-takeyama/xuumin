@@ -2,11 +2,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Diagram } from '../interfaces';
 import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
-import { State } from '../reducers';
+import { Dispatch } from 'redux';
+import { State as RootState } from '../reducers';
 import { fetchDiagramsRequest } from '../actions/diagramActions';
 import { denormalize } from 'normalizr';
-import { diagramsSchema } from '../schema';
+import { diagramsSchema, NormalizedDiagrams } from '../schema';
+import { ensureError } from '../utils';
 
 interface StateProps {
   diagrams: Diagram[];
@@ -14,10 +15,14 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  fetchDiagramsRequest: () => void;
+  fetchDiagramsRequest: () => Promise<NormalizedDiagrams>;
 }
 
-const mapStateToProps = (state: State): StateProps => {
+interface State {
+  error?: Error;
+}
+
+const mapStateToProps = (state: RootState): StateProps => {
   const { diagrams } = denormalize(
     { diagrams: state.diagram.ids },
     diagramsSchema,
@@ -30,13 +35,9 @@ const mapStateToProps = (state: State): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<State>) =>
-  bindActionCreators(
-    {
-      fetchDiagramsRequest,
-    },
-    dispatch,
-  );
+const mapDispatchToProps = (dispatch: Dispatch<RootState>) => ({
+  fetchDiagramsRequest: () => dispatch(fetchDiagramsRequest()),
+});
 
 const DiagramList: React.SFC<{ diagrams: Diagram[] }> = ({ diagrams }) => (
   <div>
@@ -50,9 +51,17 @@ const DiagramList: React.SFC<{ diagrams: Diagram[] }> = ({ diagrams }) => (
   </div>
 );
 
-class Home extends React.Component<StateProps & DispatchProps> {
+class Home extends React.Component<StateProps & DispatchProps, State> {
+  constructor(props: StateProps & DispatchProps) {
+    super(props);
+
+    this.state = { error: undefined };
+  }
+
   componentDidMount() {
-    this.props.fetchDiagramsRequest();
+    this.props
+      .fetchDiagramsRequest()
+      .catch(err => this.setState({ error: ensureError(err) }));
   }
 
   render() {
@@ -62,6 +71,9 @@ class Home extends React.Component<StateProps & DispatchProps> {
 
     return (
       <div>
+        {this.state.error && (
+          <div>Loading Error: {this.state.error.message}</div>
+        )}
         <DiagramList diagrams={this.props.diagrams} />
         <Link to={'/diagrams/new'}>New</Link>
       </div>

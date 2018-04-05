@@ -4,21 +4,18 @@ import { State } from '../reducers';
 import { ensureError } from '../utils';
 import { ThunkAction } from 'redux-thunk';
 import { normalize } from 'normalizr';
-import { diagramsSchema } from '../schema';
+import { diagramsSchema, NormalizedDiagrams } from '../schema';
 
 const actionCreatorFactory = typescriptFsa('DIAGRAM');
 
 export const fetchDiagrams = actionCreatorFactory.async<
   undefined,
-  {
-    entities: { [key: string]: Diagram };
-    ids: string[];
-  },
+  NormalizedDiagrams,
   Error
 >('FETCH_DIAGRAMS');
 
 export const fetchDiagram = actionCreatorFactory.async<
-  { uuid: string },
+  FetchDiagramParams,
   Diagram,
   Error
 >('FETCH_DIAGRAM');
@@ -35,57 +32,81 @@ export const createDiagram = actionCreatorFactory.async<
 >('CREATE_DIAGRAM');
 
 export const fetchDiagramsRequest = (): ThunkAction<
-  void,
+  Promise<NormalizedDiagrams>,
   State,
   void
-> => dispatch => {
+> => async dispatch => {
   dispatch(fetchDiagrams.started(undefined));
-  fetch('/v1/diagrams')
-    .then(res => res.json())
-    .then(diagrams => {
-      const normalized = normalize(diagrams, diagramsSchema);
+
+  try {
+    const res = await fetch('/v1/diagrams');
+    const json = await res.json();
+
+    if (res.ok) {
+      const normalized = normalize(json, diagramsSchema);
+      const normalizedDiagrams = {
+        entities: normalized.entities.diagrams,
+        ids: normalized.result.diagrams,
+      };
       dispatch(
         fetchDiagrams.done({
           params: undefined,
-          result: {
-            entities: normalized.entities.diagrams,
-            ids: normalized.result.diagrams,
-          },
+          result: normalizedDiagrams,
         }),
       );
-    })
-    .catch(err => {
-      dispatch(
-        fetchDiagrams.failed({
-          params: undefined,
-          error: ensureError(err),
-        }),
-      );
-    });
+
+      return normalizedDiagrams;
+    }
+
+    throw new Error(json.error);
+  } catch (err) {
+    const error = ensureError(err);
+    dispatch(
+      fetchDiagrams.failed({
+        error,
+        params: undefined,
+      }),
+    );
+
+    return Promise.reject(error);
+  }
 };
 
-export const fetchDiagramRequest = (params: {
+export interface FetchDiagramParams {
   uuid: string;
-}): ThunkAction<void, State, void> => dispatch => {
+}
+
+export const fetchDiagramRequest = (
+  params: FetchDiagramParams,
+): ThunkAction<Promise<Diagram>, State, void> => async dispatch => {
   dispatch(fetchDiagram.started(params));
-  fetch(`/v1/diagrams/${params.uuid}`)
-    .then(res => res.json())
-    .then(json => {
+  try {
+    const res = await fetch(`/v1/diagrams/${params.uuid}`);
+    const json = await res.json();
+
+    if (res.ok) {
       dispatch(
         fetchDiagram.done({
           params,
           result: json,
         }),
       );
-    })
-    .catch(err => {
-      dispatch(
-        fetchDiagram.failed({
-          params,
-          error: ensureError(err),
-        }),
-      );
-    });
+
+      return json;
+    }
+
+    throw new Error(json.error);
+  } catch (err) {
+    const error = ensureError(err);
+    dispatch(
+      fetchDiagram.failed({
+        params,
+        error,
+      }),
+    );
+
+    return Promise.reject(error);
+  }
 };
 
 export const createDiagramRequest = (

@@ -12,7 +12,6 @@ export interface State {
   isFetchingDiagrams: boolean;
   isFetchingDiagram: boolean;
   isCreatingDiagram: boolean;
-  error?: { message: string };
 }
 
 export const createInitialState = (): State => ({
@@ -37,10 +36,9 @@ export const diagramReducer = reducerWithInitialState(createInitialState())
     ids: action.payload.result.ids,
     isFetchingDiagrams: false,
   }))
-  .caseWithAction(fetchDiagrams.failed, (state, action) => ({
+  .case(fetchDiagrams.failed, state => ({
     ...state,
     isFetchingDiagrams: false,
-    error: action.payload.error,
   }))
   .case(fetchDiagram.started, state => ({
     ...state,
@@ -54,10 +52,9 @@ export const diagramReducer = reducerWithInitialState(createInitialState())
     },
     isFetchingDiagram: false,
   }))
-  .caseWithAction(fetchDiagram.failed, (state, action) => ({
+  .case(fetchDiagram.failed, state => ({
     ...state,
     isFetchingDiagram: false,
-    error: action.payload.error,
   }))
   .case(createDiagram.started, state => ({
     ...state,
