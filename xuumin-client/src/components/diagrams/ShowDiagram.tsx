@@ -1,20 +1,22 @@
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Diagram } from '../../interfaces';
-import { State } from '../../reducers';
+import { State as RootState } from '../../reducers';
 import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchDiagramRequest } from '../../actions/diagramActions';
+import {
+  fetchDiagramRequest,
+  FetchDiagramParams,
+} from '../../actions/diagramActions';
+import { ensureError } from '../../utils';
 
 interface StateProps {
   entities: { [key: string]: Diagram };
   ids: string[];
   isFetchingDiagram: boolean;
-  error?: { message: string };
 }
 
 interface DispatchProps {
-  fetchDiagramRequest: (params: { uuid: string }) => void;
+  fetchDiagramRequest: (params: FetchDiagramParams) => Promise<Diagram>;
 }
 
 interface RouteParams {
@@ -23,29 +25,32 @@ interface RouteParams {
 
 interface OwnProps extends RouteComponentProps<RouteParams> {}
 
-const mapStateToProps = (state: State): StateProps => ({
+interface State {
+  error?: Error;
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
   entities: state.diagram.entities,
   ids: state.diagram.ids,
   isFetchingDiagram: state.diagram.isFetchingDiagram,
-  error: state.diagram.error,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<State>) =>
-  bindActionCreators(
-    {
-      fetchDiagramRequest,
-    },
-    dispatch,
-  );
+const mapDispatchToProps = (dispatch: Dispatch<RootState>) => ({
+  fetchDiagramRequest: (params: FetchDiagramParams) =>
+    dispatch(fetchDiagramRequest(params)),
+});
 
 class ShowDiagram extends React.Component<
-  StateProps & DispatchProps & OwnProps
+  StateProps & DispatchProps & OwnProps,
+  State
 > {
   componentDidMount() {
     const diagram = this.getDiagram();
 
     if (!diagram) {
-      this.props.fetchDiagramRequest({ uuid: this.props.match.params.id });
+      this.props
+        .fetchDiagramRequest({ uuid: this.props.match.params.id })
+        .catch(err => this.setState({ error: ensureError(err) }));
     }
   }
 
@@ -71,8 +76,8 @@ class ShowDiagram extends React.Component<
         </div>
       );
     }
-    if (this.props.error) {
-      return <div>Error: {this.props.error.message}</div>;
+    if (this.state.error) {
+      return <div>Error: {this.state.error.message}</div>;
     }
 
     return <div>Unkonwn error</div>;
