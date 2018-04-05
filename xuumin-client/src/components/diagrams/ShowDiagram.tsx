@@ -10,7 +10,7 @@ interface StateProps {
   entities: { [key: string]: Diagram };
   ids: string[];
   isFetchingDiagram: boolean;
-  error?: Error;
+  error?: { message: string };
 }
 
 interface DispatchProps {
