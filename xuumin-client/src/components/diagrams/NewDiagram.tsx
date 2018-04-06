@@ -68,9 +68,8 @@ const Form: React.SFC<FormProps> = props => (
             rows={20}
             cols={80}
             onChange={event => props.onChangeSource(event.target.value)}
-          >
-            {props.form.source}
-          </textarea>
+            value={props.form.source}
+          />
         </dd>
       </dl>
       <div>
