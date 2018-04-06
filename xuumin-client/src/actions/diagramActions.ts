@@ -31,6 +31,18 @@ export const createDiagram = actionCreatorFactory.async<
   Error
 >('CREATE_DIAGRAM');
 
+export interface UpdateDiagramParams {
+  uuid: string;
+  title: string;
+  source: string;
+}
+
+export const updateDiagram = actionCreatorFactory.async<
+  UpdateDiagramParams,
+  Diagram,
+  Error
+>('UPDATE_DIAGRAM');
+
 export const fetchDiagramsRequest = (): ThunkAction<
   Promise<NormalizedDiagrams>,
   State,
@@ -133,6 +145,39 @@ export const createDiagramRequest = (
     const error = ensureError(err);
     dispatch(
       createDiagram.failed({
+        params,
+        error,
+      }),
+    );
+
+    return Promise.reject(error);
+  }
+};
+
+export const updateDiagramRequest = (
+  params: UpdateDiagramParams,
+): ThunkAction<Promise<Diagram>, State, void> => async (
+  dispatch,
+): Promise<Diagram> => {
+  dispatch(updateDiagram.started(params));
+  try {
+    const res = await fetch(`/v1/diagrams/${params.uuid}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    const json = await res.json();
+
+    if (res.ok) {
+      dispatch(updateDiagram.done({ params, result: json }));
+      return json;
+    }
+
+    throw new Error(json.error);
+  } catch (err) {
+    const error = ensureError(err);
+    dispatch(
+      updateDiagram.failed({
         params,
         error,
       }),

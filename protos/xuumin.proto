@@ -21,6 +21,12 @@ service DiagramService {
             get: "/v1/diagrams/{uuid}"
         };
     }
+    rpc UpdateDiagram(UpdateDiagramRequest) returns (Diagram) {
+        option (google.api.http) = {
+            patch: "/v1/diagrams/{uuid}"
+            body: "*"
+        };
+    }
 }
 
 message Diagram {
@@ -43,4 +49,10 @@ message AddDiagramRequest {
 
 message GetDiagramRequest {
     string uuid = 1;
+}
+
+message UpdateDiagramRequest {
+    string uuid = 1;
+    string source = 2;
+    string title = 3;
 }

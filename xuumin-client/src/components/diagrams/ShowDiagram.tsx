@@ -71,12 +71,15 @@ class ShowDiagram extends React.Component<
 
           <img src={`/diagrams/${diagram.uuid}.svg`} />
           <div>
+            <Link to={`/diagrams/${diagram.uuid}/edit`}>Edit</Link>
+          </div>
+          <div>
             <Link to="/">Home</Link>
           </div>
         </div>
       );
     }
-    if (this.state.error) {
+    if (this.state && this.state.error) {
       return <div>Error: {this.state.error.message}</div>;
     }
 
