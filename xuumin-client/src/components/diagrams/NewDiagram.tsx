@@ -9,6 +9,7 @@ import {
 import { RouteComponentProps, withRouter } from 'react-router';
 import { ensureError } from '../../utils';
 import { Link } from 'react-router-dom';
+import Form from './Form';
 
 interface StateProps {
   isCreatingDiagram: boolean;
@@ -19,15 +20,6 @@ interface DispatchProps {
 }
 
 interface OwnProps extends RouteComponentProps<{}> {}
-
-interface FormProps {
-  isCreatingDiagram: boolean;
-  error?: { message: string };
-  form: CreateDiagramParams;
-  onSubmit: (params: CreateDiagramParams) => void;
-  onChangeTitle: (title: string) => void;
-  onChangeSource: (source: string) => void;
-}
 
 interface State {
   form: CreateDiagramParams;
@@ -42,42 +34,6 @@ const mapDispatchToProps = (dispatch: Dispatch<RootState>) => ({
   createDiagramRequest: (params: CreateDiagramParams) =>
     dispatch(createDiagramRequest(params)),
 });
-
-const Form: React.SFC<FormProps> = props => (
-  <div>
-    {props.error && <div>{props.error.message}</div>}
-    <form
-      onSubmit={event => {
-        event.preventDefault();
-        props.onSubmit(props.form);
-      }}
-    >
-      <dl>
-        <dt>Title</dt>
-        <dd>
-          <input
-            type="text"
-            size={60}
-            value={props.form.title}
-            onChange={event => props.onChangeTitle(event.target.value)}
-          />
-        </dd>
-        <dt>Source</dt>
-        <dd>
-          <textarea
-            rows={20}
-            cols={80}
-            onChange={event => props.onChangeSource(event.target.value)}
-            value={props.form.source}
-          />
-        </dd>
-      </dl>
-      <div>
-        <input type="submit" value="Post" disabled={props.isCreatingDiagram} />
-      </div>
-    </form>
-  </div>
-);
 
 class NewDiagram extends React.Component<
   StateProps & DispatchProps & OwnProps,
@@ -101,7 +57,7 @@ class NewDiagram extends React.Component<
     return (
       <div>
         <Form
-          isCreatingDiagram={this.props.isCreatingDiagram}
+          isSubmitting={this.props.isCreatingDiagram}
           error={this.state.error}
           form={this.state.form}
           onSubmit={params => this.onSubmit(params)}

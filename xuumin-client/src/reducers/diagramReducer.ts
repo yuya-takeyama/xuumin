@@ -4,6 +4,7 @@ import {
   fetchDiagrams,
   fetchDiagram,
   createDiagram,
+  updateDiagram,
 } from '../actions/diagramActions';
 
 export interface State {
@@ -12,6 +13,7 @@ export interface State {
   isFetchingDiagrams: boolean;
   isFetchingDiagram: boolean;
   isCreatingDiagram: boolean;
+  isUpdatingDiagram: boolean;
 }
 
 export const createInitialState = (): State => ({
@@ -20,6 +22,7 @@ export const createInitialState = (): State => ({
   isFetchingDiagrams: false,
   isFetchingDiagram: false,
   isCreatingDiagram: false,
+  isUpdatingDiagram: false,
 });
 
 export const diagramReducer = reducerWithInitialState(createInitialState())
@@ -67,4 +70,20 @@ export const diagramReducer = reducerWithInitialState(createInitialState())
   .case(createDiagram.failed, state => ({
     ...state,
     isCreatingDiagram: false,
+  }))
+  .case(updateDiagram.started, state => ({
+    ...state,
+    isUpdatingDiagram: true,
+  }))
+  .caseWithAction(updateDiagram.done, (state, action) => ({
+    ...state,
+    entities: {
+      ...state.entities,
+      [action.payload.params.uuid]: action.payload.result,
+    },
+    isUpdatingDiagram: false,
+  }))
+  .case(updateDiagram.failed, state => ({
+    ...state,
+    isUpdatingDiagram: false,
   }));
