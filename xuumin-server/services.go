@@ -92,6 +92,10 @@ func (s *services) GetDiagram(ctx context.Context, in *pb.GetDiagramRequest) (*p
 func (s *services) UpdateDiagram(ctx context.Context, in *pb.UpdateDiagramRequest) (*pb.Diagram, error) {
 	log.Printf("UpdateDiagram: %v", in)
 
+	if in.Title == "" || in.Source == "" {
+		return nil, fmt.Errorf("title and source are required")
+	}
+
 	stmt, err := db.Prepare("UPDATE diagrams SET title = $2, source = $3 WHERE uuid = $1")
 	if err != nil {
 		return nil, fmt.Errorf("failed to update a diagram: failed to prepare: %s", err)
