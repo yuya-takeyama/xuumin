@@ -88,3 +88,24 @@ func (s *services) GetDiagram(ctx context.Context, in *pb.GetDiagramRequest) (*p
 		Title:  title,
 	}, nil
 }
+
+func (s *services) UpdateDiagram(ctx context.Context, in *pb.UpdateDiagramRequest) (*pb.Diagram, error) {
+	log.Printf("UpdateDiagram: %v", in)
+
+	stmt, err := db.Prepare("UPDATE diagrams SET title = $2, source = $3 WHERE uuid = $1")
+	if err != nil {
+		return nil, fmt.Errorf("failed to update a diagram: failed to prepare: %s", err)
+
+	}
+
+	_, execErr := stmt.Exec(in.Uuid, in.Title, in.Source)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update a new diagram: failed execute statement: %s", execErr)
+	}
+
+	return &pb.Diagram{
+		Uuid:   in.Uuid,
+		Source: in.Source,
+		Title:  in.Title,
+	}, nil
+}
