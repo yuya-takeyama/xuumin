@@ -39,19 +39,12 @@ class NewDiagram extends React.Component<
   StateProps & DispatchProps & OwnProps,
   State
 > {
-  constructor(props: StateProps & DispatchProps & OwnProps) {
-    super(props);
-
-    const initialState: State = {
-      form: {
-        title: '',
-        source: '',
-      },
-    };
-
-    // @ts-ignore
-    this.state = initialState;
-  }
+  state: Readonly<State> = {
+    form: {
+      title: '',
+      source: '',
+    },
+  };
 
   render() {
     return (

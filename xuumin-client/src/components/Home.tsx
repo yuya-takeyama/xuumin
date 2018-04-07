@@ -52,11 +52,7 @@ const DiagramList: React.SFC<{ diagrams: Diagram[] }> = ({ diagrams }) => (
 );
 
 class Home extends React.Component<StateProps & DispatchProps, State> {
-  constructor(props: StateProps & DispatchProps) {
-    super(props);
-
-    this.state = { error: undefined };
-  }
+  state: Readonly<State> = { error: undefined };
 
   componentDidMount() {
     this.props
